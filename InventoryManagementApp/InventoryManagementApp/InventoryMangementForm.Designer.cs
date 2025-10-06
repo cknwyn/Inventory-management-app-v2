@@ -33,13 +33,11 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             txtName = new TextBox();
-            txtQuantity = new TextBox();
             txtProductId = new TextBox();
             lblName = new Label();
             lblCategory = new Label();
             lblProductId = new Label();
             lblQuantity = new Label();
-            txtPrice = new TextBox();
             richTxtDescription = new RichTextBox();
             lblPrice = new Label();
             lblDescription = new Label();
@@ -47,14 +45,10 @@
             btnRemove = new Button();
             tabControlInventory = new TabControl();
             tabInventory = new TabPage();
+            btnLoad = new Button();
+            btnSearch = new Button();
             dataGridViewInventory = new DataGridView();
-            ColSelect = new DataGridViewCheckBoxColumn();
-            colName = new DataGridViewTextBoxColumn();
-            ColCategory = new DataGridViewTextBoxColumn();
-            ColQuantity = new DataGridViewTextBoxColumn();
-            ColPrice = new DataGridViewTextBoxColumn();
-            dataGridViewProductID = new DataGridViewTextBoxColumn();
-            ColDescription = new DataGridViewTextBoxColumn();
+            txtSearch = new TextBox();
             tabItemDetails = new TabPage();
             lblDescriptionDetail = new Label();
             lblPriceDetail = new Label();
@@ -70,35 +64,37 @@
             btnUploadImage = new Button();
             openFileDialog1 = new OpenFileDialog();
             label1 = new Label();
-            btnEdit = new Button();
+            btnUpdate = new Button();
             picBoxPreviewProduct = new PictureBox();
+            numQuantity = new NumericUpDown();
+            numPrice = new NumericUpDown();
+            dtpDateAdded = new DateTimePicker();
+            lblDateAdded = new Label();
+            lblSupplier = new Label();
+            txtSupplier = new TextBox();
+            btnClear = new Button();
+            txtImagePath = new TextBox();
             tabControlInventory.SuspendLayout();
             tabInventory.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInventory).BeginInit();
             tabItemDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picBoxProduct).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picBoxPreviewProduct).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numQuantity).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numPrice).BeginInit();
             SuspendLayout();
             // 
             // txtName
             // 
-            txtName.Location = new Point(138, 379);
+            txtName.Location = new Point(138, 402);
             txtName.Name = "txtName";
             txtName.Size = new Size(202, 27);
             txtName.TabIndex = 0;
             txtName.UseWaitCursor = true;
             // 
-            // txtQuantity
-            // 
-            txtQuantity.Location = new Point(468, 373);
-            txtQuantity.Name = "txtQuantity";
-            txtQuantity.Size = new Size(202, 27);
-            txtQuantity.TabIndex = 3;
-            txtQuantity.UseWaitCursor = true;
-            // 
             // txtProductId
             // 
-            txtProductId.Location = new Point(138, 473);
+            txtProductId.Location = new Point(138, 496);
             txtProductId.Name = "txtProductId";
             txtProductId.Size = new Size(202, 27);
             txtProductId.TabIndex = 2;
@@ -110,7 +106,7 @@
             lblName.BackColor = Color.Transparent;
             lblName.Font = new Font("Yu Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblName.ForeColor = SystemColors.ActiveCaptionText;
-            lblName.Location = new Point(15, 385);
+            lblName.Location = new Point(15, 408);
             lblName.Name = "lblName";
             lblName.Size = new Size(117, 21);
             lblName.TabIndex = 4;
@@ -123,7 +119,7 @@
             lblCategory.BackColor = Color.Transparent;
             lblCategory.Font = new Font("Yu Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblCategory.ForeColor = SystemColors.ActiveCaptionText;
-            lblCategory.Location = new Point(15, 428);
+            lblCategory.Location = new Point(15, 451);
             lblCategory.Name = "lblCategory";
             lblCategory.Size = new Size(77, 21);
             lblCategory.TabIndex = 5;
@@ -136,7 +132,7 @@
             lblProductId.BackColor = Color.Transparent;
             lblProductId.Font = new Font("Yu Gothic", 12F);
             lblProductId.ForeColor = SystemColors.ActiveCaptionText;
-            lblProductId.Location = new Point(15, 472);
+            lblProductId.Location = new Point(15, 495);
             lblProductId.Name = "lblProductId";
             lblProductId.Size = new Size(87, 21);
             lblProductId.TabIndex = 7;
@@ -149,26 +145,18 @@
             lblQuantity.BackColor = Color.Transparent;
             lblQuantity.Font = new Font("Yu Gothic", 12F);
             lblQuantity.ForeColor = SystemColors.ActiveCaptionText;
-            lblQuantity.Location = new Point(368, 379);
+            lblQuantity.Location = new Point(363, 403);
             lblQuantity.Name = "lblQuantity";
             lblQuantity.Size = new Size(73, 21);
             lblQuantity.TabIndex = 6;
             lblQuantity.Text = "Quantity";
             lblQuantity.UseWaitCursor = true;
             // 
-            // txtPrice
-            // 
-            txtPrice.Location = new Point(468, 422);
-            txtPrice.Name = "txtPrice";
-            txtPrice.Size = new Size(202, 27);
-            txtPrice.TabIndex = 4;
-            txtPrice.UseWaitCursor = true;
-            // 
             // richTxtDescription
             // 
-            richTxtDescription.Location = new Point(138, 521);
+            richTxtDescription.Location = new Point(138, 545);
             richTxtDescription.Name = "richTxtDescription";
-            richTxtDescription.Size = new Size(202, 96);
+            richTxtDescription.Size = new Size(202, 88);
             richTxtDescription.TabIndex = 5;
             richTxtDescription.Text = "";
             richTxtDescription.UseWaitCursor = true;
@@ -179,7 +167,7 @@
             lblPrice.BackColor = Color.Transparent;
             lblPrice.Font = new Font("Yu Gothic", 12F);
             lblPrice.ForeColor = SystemColors.ActiveCaptionText;
-            lblPrice.Location = new Point(368, 428);
+            lblPrice.Location = new Point(363, 452);
             lblPrice.Name = "lblPrice";
             lblPrice.Size = new Size(48, 21);
             lblPrice.TabIndex = 11;
@@ -192,7 +180,7 @@
             lblDescription.BackColor = Color.Transparent;
             lblDescription.Font = new Font("Yu Gothic", 12F);
             lblDescription.ForeColor = SystemColors.ActiveCaptionText;
-            lblDescription.Location = new Point(14, 520);
+            lblDescription.Location = new Point(14, 543);
             lblDescription.Name = "lblDescription";
             lblDescription.Size = new Size(94, 21);
             lblDescription.TabIndex = 12;
@@ -203,7 +191,7 @@
             // 
             btnAdd.BackColor = Color.PaleGreen;
             btnAdd.Font = new Font("Yu Gothic", 12F);
-            btnAdd.Location = new Point(368, 557);
+            btnAdd.Location = new Point(366, 593);
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(156, 44);
             btnAdd.TabIndex = 8;
@@ -216,7 +204,7 @@
             // 
             btnRemove.BackColor = Color.Pink;
             btnRemove.Font = new Font("Yu Gothic", 12F);
-            btnRemove.Location = new Point(751, 557);
+            btnRemove.Location = new Point(690, 593);
             btnRemove.Name = "btnRemove";
             btnRemove.Size = new Size(156, 44);
             btnRemove.TabIndex = 9;
@@ -233,21 +221,46 @@
             tabControlInventory.Location = new Point(-2, 61);
             tabControlInventory.Name = "tabControlInventory";
             tabControlInventory.SelectedIndex = 0;
-            tabControlInventory.Size = new Size(950, 306);
+            tabControlInventory.Size = new Size(1137, 306);
             tabControlInventory.TabIndex = 10;
             tabControlInventory.UseWaitCursor = true;
             // 
             // tabInventory
             // 
             tabInventory.BackColor = Color.Transparent;
+            tabInventory.Controls.Add(btnLoad);
+            tabInventory.Controls.Add(btnSearch);
             tabInventory.Controls.Add(dataGridViewInventory);
+            tabInventory.Controls.Add(txtSearch);
             tabInventory.Location = new Point(4, 28);
             tabInventory.Name = "tabInventory";
             tabInventory.Padding = new Padding(3);
-            tabInventory.Size = new Size(942, 274);
+            tabInventory.Size = new Size(1129, 274);
             tabInventory.TabIndex = 0;
             tabInventory.Text = "Inventory";
             tabInventory.UseWaitCursor = true;
+            // 
+            // btnLoad
+            // 
+            btnLoad.Location = new Point(10, 10);
+            btnLoad.Name = "btnLoad";
+            btnLoad.Size = new Size(75, 23);
+            btnLoad.TabIndex = 27;
+            btnLoad.Text = "Load";
+            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.UseWaitCursor = true;
+            btnLoad.Click += btnLoad_Click;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Location = new Point(1048, 10);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(75, 27);
+            btnSearch.TabIndex = 26;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.UseWaitCursor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
             // dataGridViewInventory
             // 
@@ -269,7 +282,6 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dataGridViewInventory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dataGridViewInventory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewInventory.Columns.AddRange(new DataGridViewColumn[] { ColSelect, colName, ColCategory, ColQuantity, ColPrice, dataGridViewProductID, ColDescription });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.TopCenter;
             dataGridViewCellStyle3.BackColor = SystemColors.Window;
             dataGridViewCellStyle3.Font = new Font("Yu Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -278,70 +290,24 @@
             dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
             dataGridViewInventory.DefaultCellStyle = dataGridViewCellStyle3;
-            dataGridViewInventory.Location = new Point(0, 3);
+            dataGridViewInventory.Location = new Point(0, 43);
+            dataGridViewInventory.MultiSelect = false;
             dataGridViewInventory.Name = "dataGridViewInventory";
+            dataGridViewInventory.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.TopCenter;
             dataGridViewInventory.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            dataGridViewInventory.Size = new Size(942, 271);
+            dataGridViewInventory.Size = new Size(1126, 231);
             dataGridViewInventory.TabIndex = 0;
             dataGridViewInventory.UseWaitCursor = true;
-            dataGridViewInventory.SelectionChanged += dataGridViewInventory_SelectionChanged;
+            dataGridViewInventory.CellContentClick += dataGridViewInventory_CellContentClick;
             // 
-            // ColSelect
+            // txtSearch
             // 
-            ColSelect.FillWeight = 15F;
-            ColSelect.HeaderText = "Select";
-            ColSelect.Name = "ColSelect";
-            ColSelect.Resizable = DataGridViewTriState.True;
-            ColSelect.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // colName
-            // 
-            colName.FillWeight = 46.46345F;
-            colName.HeaderText = "Product Name";
-            colName.Name = "colName";
-            colName.ReadOnly = true;
-            colName.Resizable = DataGridViewTriState.False;
-            // 
-            // ColCategory
-            // 
-            ColCategory.FillWeight = 46.46345F;
-            ColCategory.HeaderText = "Category";
-            ColCategory.Name = "ColCategory";
-            ColCategory.ReadOnly = true;
-            ColCategory.Resizable = DataGridViewTriState.False;
-            // 
-            // ColQuantity
-            // 
-            ColQuantity.FillWeight = 46.46345F;
-            ColQuantity.HeaderText = "Quantity";
-            ColQuantity.Name = "ColQuantity";
-            ColQuantity.ReadOnly = true;
-            ColQuantity.Resizable = DataGridViewTriState.False;
-            // 
-            // ColPrice
-            // 
-            ColPrice.FillWeight = 46.46345F;
-            ColPrice.HeaderText = "Price";
-            ColPrice.Name = "ColPrice";
-            ColPrice.ReadOnly = true;
-            ColPrice.Resizable = DataGridViewTriState.False;
-            // 
-            // dataGridViewProductID
-            // 
-            dataGridViewProductID.FillWeight = 46.46345F;
-            dataGridViewProductID.HeaderText = "Product ID";
-            dataGridViewProductID.Name = "dataGridViewProductID";
-            dataGridViewProductID.ReadOnly = true;
-            dataGridViewProductID.Resizable = DataGridViewTriState.False;
-            // 
-            // ColDescription
-            // 
-            ColDescription.FillWeight = 46.46345F;
-            ColDescription.HeaderText = "Product Description";
-            ColDescription.Name = "ColDescription";
-            ColDescription.ReadOnly = true;
-            ColDescription.Resizable = DataGridViewTriState.False;
+            txtSearch.Location = new Point(824, 10);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(218, 27);
+            txtSearch.TabIndex = 25;
+            txtSearch.UseWaitCursor = true;
             // 
             // tabItemDetails
             // 
@@ -356,7 +322,7 @@
             tabItemDetails.Location = new Point(4, 27);
             tabItemDetails.Name = "tabItemDetails";
             tabItemDetails.Padding = new Padding(3);
-            tabItemDetails.Size = new Size(942, 275);
+            tabItemDetails.Size = new Size(1129, 275);
             tabItemDetails.TabIndex = 1;
             tabItemDetails.Text = "Product Details";
             tabItemDetails.UseWaitCursor = true;
@@ -460,7 +426,7 @@
             cboxCategory.Font = new Font("Yu Gothic", 10F);
             cboxCategory.FormattingEnabled = true;
             cboxCategory.Items.AddRange(new object[] { "CPU", "CPU Cooler", "Motherboard", "Memory", "Storage", "Video Card", "Case", "Power Supply", "Monitor" });
-            cboxCategory.Location = new Point(138, 424);
+            cboxCategory.Location = new Point(138, 447);
             cboxCategory.Name = "cboxCategory";
             cboxCategory.Size = new Size(202, 25);
             cboxCategory.TabIndex = 1;
@@ -472,7 +438,7 @@
             lblProductImage.BackColor = Color.Transparent;
             lblProductImage.Font = new Font("Yu Gothic", 12F);
             lblProductImage.ForeColor = SystemColors.ActiveCaptionText;
-            lblProductImage.Location = new Point(368, 479);
+            lblProductImage.Location = new Point(704, 431);
             lblProductImage.Name = "lblProductImage";
             lblProductImage.Size = new Size(56, 21);
             lblProductImage.TabIndex = 18;
@@ -481,7 +447,7 @@
             // 
             // btnUploadImage
             // 
-            btnUploadImage.Location = new Point(468, 470);
+            btnUploadImage.Location = new Point(704, 464);
             btnUploadImage.Name = "btnUploadImage";
             btnUploadImage.Size = new Size(202, 42);
             btnUploadImage.TabIndex = 6;
@@ -499,45 +465,135 @@
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Yu Gothic", 21F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(805, 9);
+            label1.Location = new Point(1023, 9);
             label1.Name = "label1";
             label1.Size = new Size(102, 36);
             label1.TabIndex = 19;
             label1.Text = "Admin";
             label1.UseWaitCursor = true;
             // 
-            // btnEdit
+            // btnUpdate
             // 
-            btnEdit.BackColor = Color.SkyBlue;
-            btnEdit.Font = new Font("Yu Gothic", 12F);
-            btnEdit.Location = new Point(560, 557);
-            btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(156, 44);
-            btnEdit.TabIndex = 20;
-            btnEdit.Text = "Edit";
-            btnEdit.UseVisualStyleBackColor = false;
-            btnEdit.UseWaitCursor = true;
-            btnEdit.Click += btnEdit_Click;
+            btnUpdate.BackColor = Color.SkyBlue;
+            btnUpdate.Font = new Font("Yu Gothic", 12F);
+            btnUpdate.Location = new Point(528, 593);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(156, 44);
+            btnUpdate.TabIndex = 20;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = false;
+            btnUpdate.UseWaitCursor = true;
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // picBoxPreviewProduct
             // 
             picBoxPreviewProduct.BackColor = Color.White;
             picBoxPreviewProduct.BorderStyle = BorderStyle.FixedSingle;
-            picBoxPreviewProduct.Location = new Point(721, 373);
+            picBoxPreviewProduct.Location = new Point(937, 402);
             picBoxPreviewProduct.Name = "picBoxPreviewProduct";
-            picBoxPreviewProduct.Size = new Size(186, 155);
+            picBoxPreviewProduct.Size = new Size(186, 169);
             picBoxPreviewProduct.TabIndex = 21;
             picBoxPreviewProduct.TabStop = false;
             picBoxPreviewProduct.UseWaitCursor = true;
+            // 
+            // numQuantity
+            // 
+            numQuantity.Location = new Point(463, 403);
+            numQuantity.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            numQuantity.Name = "numQuantity";
+            numQuantity.Size = new Size(202, 27);
+            numQuantity.TabIndex = 22;
+            numQuantity.UseWaitCursor = true;
+            // 
+            // numPrice
+            // 
+            numPrice.DecimalPlaces = 2;
+            numPrice.Location = new Point(463, 448);
+            numPrice.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            numPrice.Name = "numPrice";
+            numPrice.Size = new Size(202, 27);
+            numPrice.TabIndex = 23;
+            numPrice.UseWaitCursor = true;
+            // 
+            // dtpDateAdded
+            // 
+            dtpDateAdded.Location = new Point(463, 544);
+            dtpDateAdded.Name = "dtpDateAdded";
+            dtpDateAdded.Size = new Size(200, 27);
+            dtpDateAdded.TabIndex = 24;
+            dtpDateAdded.UseWaitCursor = true;
+            // 
+            // lblDateAdded
+            // 
+            lblDateAdded.AutoSize = true;
+            lblDateAdded.BackColor = Color.Transparent;
+            lblDateAdded.Font = new Font("Yu Gothic", 12F);
+            lblDateAdded.ForeColor = SystemColors.ActiveCaptionText;
+            lblDateAdded.Location = new Point(363, 544);
+            lblDateAdded.Name = "lblDateAdded";
+            lblDateAdded.Size = new Size(46, 21);
+            lblDateAdded.TabIndex = 25;
+            lblDateAdded.Text = "Date";
+            lblDateAdded.UseWaitCursor = true;
+            // 
+            // lblSupplier
+            // 
+            lblSupplier.AutoSize = true;
+            lblSupplier.BackColor = Color.Transparent;
+            lblSupplier.Font = new Font("Yu Gothic", 12F);
+            lblSupplier.ForeColor = SystemColors.ActiveCaptionText;
+            lblSupplier.Location = new Point(363, 495);
+            lblSupplier.Name = "lblSupplier";
+            lblSupplier.Size = new Size(70, 21);
+            lblSupplier.TabIndex = 26;
+            lblSupplier.Text = "Supplier";
+            lblSupplier.UseWaitCursor = true;
+            // 
+            // txtSupplier
+            // 
+            txtSupplier.Location = new Point(463, 496);
+            txtSupplier.Name = "txtSupplier";
+            txtSupplier.Size = new Size(202, 27);
+            txtSupplier.TabIndex = 27;
+            txtSupplier.UseWaitCursor = true;
+            // 
+            // btnClear
+            // 
+            btnClear.BackColor = Color.Gold;
+            btnClear.Font = new Font("Yu Gothic", 12F);
+            btnClear.Location = new Point(967, 593);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(156, 44);
+            btnClear.TabIndex = 28;
+            btnClear.Text = "Clear";
+            btnClear.UseVisualStyleBackColor = false;
+            btnClear.UseWaitCursor = true;
+            btnClear.Click += btnClear_Click;
+            // 
+            // txtImagePath
+            // 
+            txtImagePath.Location = new Point(15, 652);
+            txtImagePath.Name = "txtImagePath";
+            txtImagePath.Size = new Size(100, 27);
+            txtImagePath.TabIndex = 29;
+            txtImagePath.UseWaitCursor = true;
             // 
             // InventoryMangementForm
             // 
             AutoScaleDimensions = new SizeF(7F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(224, 224, 224);
-            ClientSize = new Size(944, 645);
+            ClientSize = new Size(1135, 646);
+            Controls.Add(txtImagePath);
+            Controls.Add(btnClear);
+            Controls.Add(txtSupplier);
+            Controls.Add(lblSupplier);
+            Controls.Add(lblDateAdded);
+            Controls.Add(dtpDateAdded);
+            Controls.Add(numPrice);
+            Controls.Add(numQuantity);
             Controls.Add(picBoxPreviewProduct);
-            Controls.Add(btnEdit);
+            Controls.Add(btnUpdate);
             Controls.Add(label1);
             Controls.Add(btnUploadImage);
             Controls.Add(lblProductImage);
@@ -549,12 +605,10 @@
             Controls.Add(lblDescription);
             Controls.Add(lblPrice);
             Controls.Add(richTxtDescription);
-            Controls.Add(txtPrice);
             Controls.Add(lblProductId);
             Controls.Add(lblQuantity);
             Controls.Add(lblCategory);
             Controls.Add(lblName);
-            Controls.Add(txtQuantity);
             Controls.Add(txtProductId);
             Controls.Add(txtName);
             Font = new Font("Yu Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -566,11 +620,14 @@
             UseWaitCursor = true;
             tabControlInventory.ResumeLayout(false);
             tabInventory.ResumeLayout(false);
+            tabInventory.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridViewInventory).EndInit();
             tabItemDetails.ResumeLayout(false);
             tabItemDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picBoxProduct).EndInit();
             ((System.ComponentModel.ISupportInitialize)picBoxPreviewProduct).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numQuantity).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numPrice).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -578,13 +635,11 @@
         #endregion
 
         private TextBox txtName;
-        private TextBox txtQuantity;
         private TextBox txtProductId;
         private Label lblName;
         private Label lblCategory;
         private Label lblProductId;
         private Label lblQuantity;
-        private TextBox txtPrice;
         private RichTextBox richTxtDescription;
         private Label lblPrice;
         private Label lblDescription;
@@ -608,14 +663,18 @@
         private OpenFileDialog openFileDialog1;
         private DataGridView dataGridViewInventory;
         private Label label1;
-        private Button btnEdit;
+        private Button btnUpdate;
         private PictureBox picBoxPreviewProduct;
-        private DataGridViewCheckBoxColumn ColSelect;
-        private DataGridViewTextBoxColumn colName;
-        private DataGridViewTextBoxColumn ColCategory;
-        private DataGridViewTextBoxColumn ColQuantity;
-        private DataGridViewTextBoxColumn ColPrice;
-        private DataGridViewTextBoxColumn dataGridViewProductID;
-        private DataGridViewTextBoxColumn ColDescription;
+        private NumericUpDown numQuantity;
+        private NumericUpDown numPrice;
+        private DateTimePicker dtpDateAdded;
+        private TextBox txtSearch;
+        private Button btnSearch;
+        private Button btnLoad;
+        private Label lblDateAdded;
+        private Label lblSupplier;
+        private TextBox txtSupplier;
+        private Button btnClear;
+        private TextBox txtImagePath;
     }
 }

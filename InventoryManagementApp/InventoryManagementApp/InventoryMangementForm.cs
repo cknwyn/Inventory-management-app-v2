@@ -1,88 +1,82 @@
+using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Windows.Forms;
+using System.Xml.Linq;
+
 namespace InventoryManagementApp
 {
     public partial class InventoryMangementForm : Form
     {
+        private string connectionString;
+
         private List<Product> products = new List<Product>();
 
         public InventoryMangementForm()
         {
             InitializeComponent();
+            connectionString = ConfigurationManager.ConnectionStrings["InventoryDB"].ConnectionString;
         }
 
         // Adding new products to the data grid view table.
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Get input values
-                string name = txtName.Text;
-                string description = richTxtDescription.Text;
-                string category = cboxCategory.Text;
-                string imagePath = picBoxProduct.Tag as string ?? string.Empty;
-                int productId = int.Parse(txtProductId.Text);
-                int quantity = int.Parse(txtQuantity.Text);
-                decimal price = decimal.Parse(txtPrice.Text);
-
-                // Create new product
-                Product p = new Product(name, category, description, productId, quantity, price, imagePath);
-                products.Add(p);
-                // Update ListBox
-                UpdateProductList();
-                // Clear TextBoxes
-                txtName.Clear();
-                cboxCategory.SelectedIndex = -1;
-                richTxtDescription.Clear();
-                txtProductId.Clear();
-                txtQuantity.Clear();
-                txtPrice.Clear();
-                picBoxProduct.Image = null;
-                picBoxPreviewProduct.Image = null;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error adding product: {ex.Message}");
-            }
-        }
-
-        // Refresh the DataGridView to show current inventory
-        private void UpdateProductList()
-        {
-            dataGridViewInventory.Rows.Clear();
-            foreach (Product p in products)
-            {
-                dataGridViewInventory.Rows.Add(false, p.Name, p.Category, p.Quantity, p.Price.ToString("C"), p.ProductId, p.Description);
-            }
-            // Restore selection if possible
-            if (products.Count > 0)
-            {
-                dataGridViewInventory.Rows[0].Selected = true;
-            }
-            else
-            {
-                ClearProductDetails();
+                conn.Open();
+                string insertQuery = "SET IDENTITY_INSERT Products ON;" +
+                    "INSERT INTO Products (Name, Category, ItemDescription, ProductId, Quantity, Price, ImagePath, Supplier) " +
+                                     "VALUES (@Name, @Category, @ItemDescription, @ProductId, @Quantity, @Price, @ImagePath, @Supplier)";
+                using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Name", txtName.Text);
+                    cmd.Parameters.AddWithValue("@Category", cboxCategory.Text);
+                    cmd.Parameters.AddWithValue("@Description", richTxtDescription.Text);
+                    cmd.Parameters.AddWithValue("@ProductId", int.Parse(txtProductId.Text));
+                    cmd.Parameters.AddWithValue("@Quantity", int.Parse(numQuantity.Text));
+                    cmd.Parameters.AddWithValue("@Price", decimal.Parse(numPrice.Text));
+                    cmd.Parameters.AddWithValue("@ImagePath", txtImagePath.Text);
+                    cmd.Parameters.AddWithValue("@Supplier", txtSupplier.Text);
+                    cmd.Parameters.AddWithValue("@DateAdded", dtpDateAdded.Value);
+                    cmd.Parameters.AddWithValue("@ItemDescription", richTxtDescription.Text);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        MessageBox.Show("Product added to database successfully.");
+                        LoadProducts(); // Refresh the DataGridView
+                        ClearFields(); // Clear input fields
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error adding product to database: {ex.Message}");
+                    }
+                }
             }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            // Collect indices to remove (in reverse order to avoid shifting)
-            var indicesToRemove = new List<int>();
-            for (int i = dataGridViewInventory.Rows.Count - 1; i >= 0; i--)
+            if (dataGridViewInventory.SelectedRows.Count > 0)
             {
-                var row = dataGridViewInventory.Rows[i];
-                if (row.Cells["ColSelect"].Value is bool isChecked && isChecked)
+                int productId = Convert.ToInt32(dataGridViewInventory.SelectedRows[0].Cells["ProductID"].Value);
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    indicesToRemove.Add(i);
+                    string query = "DELETE FROM Products WHERE ProductID=@ProductID";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+
+                    LoadProducts();
+                    ClearFields();
+                    MessageBox.Show("Product deleted successfully!");
                 }
             }
-
-            // Remove from products list and DataGridView
-            foreach (int i in indicesToRemove)
-            {
-                if (i >= 0 && i < products.Count)
-                    products.RemoveAt(i);
-            }
-            UpdateProductList();
         }
 
         private void btnUploadImage_Click(object sender, EventArgs e)
@@ -96,6 +90,7 @@ namespace InventoryManagementApp
                 {
                     picBoxProduct.Image = Image.FromFile(imagePath);
                     picBoxPreviewProduct.Image = Image.FromFile(imagePath);
+                    txtImagePath.Text = imagePath;
                     MessageBox.Show("Image loaded successfully.");
                 }
                 catch (Exception ex)
@@ -137,8 +132,8 @@ namespace InventoryManagementApp
                     cboxCategory.Text = selectedProduct.Category;
                     richTxtDescription.Text = selectedProduct.Description;
                     txtProductId.Text = selectedProduct.ProductId.ToString();
-                    txtQuantity.Text = selectedProduct.Quantity.ToString();
-                    txtPrice.Text = selectedProduct.Price.ToString();
+                    numQuantity.Text = selectedProduct.Quantity.ToString();
+                    numPrice.Text = selectedProduct.Price.ToString();
                     picBoxProduct.Tag = selectedProduct.ImagePath;
                     if (!string.IsNullOrEmpty(selectedProduct.ImagePath) && File.Exists(selectedProduct.ImagePath))
                     {
@@ -155,39 +150,58 @@ namespace InventoryManagementApp
         }
 
         // Edit the selected product with new values from input fields
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (dataGridViewInventory.SelectedRows.Count > 0)
+            if (string.IsNullOrWhiteSpace(txtProductId.Text))
             {
-                int index = dataGridViewInventory.SelectedRows[0].Index;
-                if (index >= 0 && index < products.Count)
-                {
-                    try
-                    {
-                        // Update the selected product with new values
-                        Product selectedProduct = products[index];
-                        selectedProduct.Name = txtName.Text;
-                        selectedProduct.Category = cboxCategory.Text;
-                        selectedProduct.Description = richTxtDescription.Text;
-                        selectedProduct.ProductId = int.Parse(txtProductId.Text);
-                        selectedProduct.Quantity = int.Parse(txtQuantity.Text);
-                        selectedProduct.Price = decimal.Parse(txtPrice.Text);
-                        selectedProduct.ImagePath = picBoxProduct.Tag as string ?? string.Empty;
+                MessageBox.Show("Please select a product to update.");
+                return;
+            }
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"UPDATE Products 
+                   SET Name=@Name, 
+                       Category=@Category, 
+                       Quantity=@Quantity, 
+                       Price=@Price,
+                       Supplier=@Supplier, 
+                       DateAdded=@DateAdded, 
+                       ImagePath=@ImagePath 
+                   WHERE ProductID=@ProductID";
 
-                        UpdateProductList();
-                        ClearProductDetails();
-                        MessageBox.Show("Product updated successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error updating product: {ex.Message}");
-                    }
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                // Pass values from form controls to query
+                cmd.Parameters.AddWithValue("@ProductID", Convert.ToInt32(txtProductId.Text));
+                cmd.Parameters.AddWithValue("@Name", txtName.Text);
+                cmd.Parameters.AddWithValue("@Category", cboxCategory.Text);
+                cmd.Parameters.AddWithValue("@Quantity", numQuantity.Value);
+                cmd.Parameters.AddWithValue("@Price", decimal.Parse(numPrice.Text));
+                cmd.Parameters.AddWithValue("@Supplier", txtSupplier.Text);
+                cmd.Parameters.AddWithValue("@DateAdded", dtpDateAdded.Value);
+                cmd.Parameters.AddWithValue("@ImagePath", txtImagePath.Text);
+
+                conn.Open();
+                int rows = cmd.ExecuteNonQuery();
+                conn.Close();
+
+                // Check if update succeeded
+                if (rows > 0)
+                {
+                    MessageBox.Show("Product updated successfully!");
+
+                    // Refresh DataGridView
+                    LoadProducts();
+
+                    // Clear fields after update
+                    ClearFields();
+                }
+                else
+                {
+                    MessageBox.Show("Update failed. Please select a valid product.");
                 }
             }
-            else
-            {
-                MessageBox.Show("Please select a product to edit.");
-            }
+
         }
 
         private Product? GetSelectedProduct()
@@ -195,38 +209,89 @@ namespace InventoryManagementApp
             if (dataGridViewInventory.SelectedRows.Count > 0)
             {
                 var row = dataGridViewInventory.SelectedRows[0];
-                // Assuming ProductId is in column 5 (adjust if needed)
                 int productId = Convert.ToInt32(row.Cells[5].Value);
                 return products.FirstOrDefault(p => p.ProductId == productId);
             }
             return null;
         }
 
-        private void dataGridViewInventory_SelectionChanged(object sender, EventArgs e)
+        private void LoadProducts()
         {
-            var selectedProduct = GetSelectedProduct();
-            if (selectedProduct != null)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                lblNameDetail.Text = $"Name: {selectedProduct.Name}";
-                lblCategoryDetail.Text = $"Category: {selectedProduct.Category}";
-                lblDescriptionDetail.Text = $"Description: {selectedProduct.Description}";
-                lblPriceDetail.Text = $"Price: {selectedProduct.Price:C}";
-                lblQuantityDetail.Text = $"Quantity: {selectedProduct.Quantity}";
-                lblProductIDDetail.Text = $"Product ID: {selectedProduct.ProductId}";
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM Products", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridViewInventory.DataSource = dt;
+            }
+        }
+        private void ClearFields()
+        {
+            txtName.Clear();
+            txtSupplier.Clear();
+            dtpDateAdded.Value = DateTime.Now;
+            cboxCategory.SelectedIndex = -1;
+            richTxtDescription.Clear();
+            txtProductId.Clear();
+            txtImagePath.Clear();
+            numQuantity.Value = 0;
+            numPrice.Value = 0;
+            picBoxProduct.Image = null;
+            picBoxPreviewProduct.Image = null;
+        }
 
-                if (!string.IsNullOrEmpty(selectedProduct.ImagePath) && File.Exists(selectedProduct.ImagePath))
+        private void dataGridViewInventory_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) // ignore header row
+            {
+                DataGridViewRow row = dataGridViewInventory.Rows[e.RowIndex];
+
+                txtProductId.Text = row.Cells["ProductID"].Value.ToString();
+                txtName.Text = row.Cells["Name"].Value.ToString();
+                cboxCategory.Text = row.Cells["Category"].Value.ToString();
+                numQuantity.Value = Convert.ToDecimal(row.Cells["Quantity"].Value);
+                numPrice.Text = row.Cells["Price"].Value.ToString();
+                txtSupplier.Text = row.Cells["Supplier"].Value.ToString();
+                dtpDateAdded.Value = Convert.ToDateTime(row.Cells["DateAdded"].Value);
+
+                if (row.Cells["ImagePath"].Value != DBNull.Value)
                 {
-                    picBoxProduct.Image = Image.FromFile(selectedProduct.ImagePath);
+                    txtImagePath.Text = row.Cells["ImagePath"].Value.ToString();
+                    picBoxProduct.ImageLocation = txtImagePath.Text;
                 }
                 else
                 {
+                    txtImagePath.Clear();
                     picBoxProduct.Image = null;
                 }
             }
-            else
+
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            ClearFields();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            LoadProducts();   // Refresh DataGridView with all products
+            ClearFields();
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                ClearProductDetails();
+                string query = "SELECT * FROM Products WHERE Name LIKE @Search OR Category LIKE @Search OR Supplier LIKE @Search";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                da.SelectCommand.Parameters.AddWithValue("@Search", "%" + txtSearch.Text + "%");
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridViewInventory.DataSource = dt;
             }
+
         }
     }
 }

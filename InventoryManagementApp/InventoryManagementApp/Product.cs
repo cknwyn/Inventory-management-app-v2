@@ -15,6 +15,7 @@ namespace InventoryManagementApp
         private string name = string.Empty;
         private string category = string.Empty;
         private string description = string.Empty; // added description field
+        private string supplier = string.Empty; // added supplier field
         private int productId = 0; // added productId field
         private int quantity = 0;
         private decimal price = 0;
@@ -22,7 +23,7 @@ namespace InventoryManagementApp
 
         // Constructor
         // The constructor initializes a new Product with the given values.
-        public Product(string name, string category, string description, int productId, int quantity, decimal price, string imagePath)
+        public Product(string name, string category, string description, int productId, int quantity, decimal price, string imagePath, string supplier)
         {
             Name = name;
             Category = category;
@@ -31,6 +32,7 @@ namespace InventoryManagementApp
             Quantity = quantity;
             Price = price;
             ImagePath = imagePath;
+            Supplier = supplier;
         }
         // Properties with encapsulation
         // Properties act as controlled gateways to the fields.
@@ -113,6 +115,18 @@ namespace InventoryManagementApp
             set
             {
                 imagePath = string.IsNullOrEmpty(value) ? "default.png" : value;
+            }
+        }
+
+        public string Supplier
+        {
+            get { return supplier; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    supplier = value;
+                else
+                    throw new ArgumentException("Supplier cannot be empty");
             }
         }
 
