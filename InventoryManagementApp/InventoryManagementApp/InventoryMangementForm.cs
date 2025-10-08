@@ -246,6 +246,7 @@ namespace InventoryManagementApp
             {
                 DataGridViewRow row = dataGridViewInventory.Rows[e.RowIndex];
 
+                // pre-load values in case of update
                 txtProductId.Text = row.Cells["ProductID"].Value.ToString();
                 txtName.Text = row.Cells["Name"].Value.ToString();
                 cboxCategory.Text = row.Cells["Category"].Value.ToString();
@@ -253,6 +254,16 @@ namespace InventoryManagementApp
                 numPrice.Text = row.Cells["Price"].Value.ToString();
                 txtSupplier.Text = row.Cells["Supplier"].Value.ToString();
                 dtpDateAdded.Value = Convert.ToDateTime(row.Cells["DateAdded"].Value);
+                richTxtDescription.Text = row.Cells["ItemDescription"].Value.ToString();
+                
+                // load values to product details too
+                lblProductIDDetail.Text = $"Product ID: {row.Cells["ProductID"].Value}";
+                lblNameDetail.Text = $"Name: {row.Cells["Name"].Value}";
+                lblCategoryDetail.Text = $"Category: {row.Cells["Category"].Value}";
+                lblQuantityDetail.Text = $"Quantity: {row.Cells["Quantity"].Value}";
+                lblPriceDetail.Text = $"Price: ${row.Cells["Price"].Value}";
+                lblDescriptionDetail.Text = $"Description: {row.Cells["ItemDescription"].Value}";
+
 
                 if (row.Cells["ImagePath"].Value != DBNull.Value)
                 {
