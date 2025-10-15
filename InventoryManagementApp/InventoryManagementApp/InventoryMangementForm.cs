@@ -30,19 +30,20 @@ namespace InventoryManagementApp
                                      "VALUES (@Name, @Category, @ItemDescription, @ProductId, @Quantity, @Price, @ImagePath, @Supplier)";
                 using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Name", txtName.Text);
-                    cmd.Parameters.AddWithValue("@Category", cboxCategory.Text);
-                    cmd.Parameters.AddWithValue("@Description", richTxtDescription.Text);
-                    cmd.Parameters.AddWithValue("@ProductId", int.Parse(txtProductId.Text));
-                    cmd.Parameters.AddWithValue("@Quantity", int.Parse(numQuantity.Text));
-                    cmd.Parameters.AddWithValue("@Price", decimal.Parse(numPrice.Text));
-                    cmd.Parameters.AddWithValue("@ImagePath", txtImagePath.Text);
-                    cmd.Parameters.AddWithValue("@Supplier", txtSupplier.Text);
-                    cmd.Parameters.AddWithValue("@DateAdded", dtpDateAdded.Value);
-                    cmd.Parameters.AddWithValue("@ItemDescription", richTxtDescription.Text);
                     try
                     {
+                        cmd.Parameters.AddWithValue("@Name", txtName.Text);
+                        cmd.Parameters.AddWithValue("@Category", cboxCategory.Text);
+                        cmd.Parameters.AddWithValue("@Description", richTxtDescription.Text);
+                        cmd.Parameters.AddWithValue("@ProductId", int.Parse(txtProductId.Text));
+                        cmd.Parameters.AddWithValue("@Quantity", int.Parse(numQuantity.Text));
+                        cmd.Parameters.AddWithValue("@Price", decimal.Parse(numPrice.Text));
+                        cmd.Parameters.AddWithValue("@ImagePath", txtImagePath.Text);
+                        cmd.Parameters.AddWithValue("@Supplier", txtSupplier.Text);
+                        cmd.Parameters.AddWithValue("@DateAdded", dtpDateAdded.Value);
+                        cmd.Parameters.AddWithValue("@ItemDescription", richTxtDescription.Text);
                         cmd.ExecuteNonQuery();
+
                         conn.Close();
                         MessageBox.Show("Product added to database successfully.");
                         LoadProducts(); // Refresh the DataGridView
@@ -50,7 +51,7 @@ namespace InventoryManagementApp
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error adding product to database: {ex.Message}");
+                        MessageBox.Show($"Error adding product to database: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -223,6 +224,7 @@ namespace InventoryManagementApp
                 DataTable dt = new DataTable();
                 da.Fill(dt);
                 dataGridViewInventory.DataSource = dt;
+                dataGridViewInventory.ReadOnly = true;
             }
         }
         private void ClearFields()
